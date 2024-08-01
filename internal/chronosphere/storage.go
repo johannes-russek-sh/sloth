@@ -201,6 +201,7 @@ func createChronosphereMonitors(slo StorageSLO, collectionSlug string, logger lo
 			Collection:               collectionSlug,
 			Interval_secs:            60,
 			Labels:                   rule.Labels,
+			Annotations:              rule.Annotations,
 			Notification_policy_slug: rule.Labels["routing_key"], // TODO set routing
 			Series_conditions:        map[string]map[string]map[string][]chronosphereMonitorConditions{"defaults": conditions},
 		}
@@ -324,6 +325,7 @@ type chronosphereMonitor struct {
 	Collection               string                                                           `yaml:"collection_slug"`
 	Interval_secs            int                                                              `yaml:"interval_secs"`
 	Labels                   map[string]string                                                `yaml:"labels"`
+	Annotations              map[string]string                                                `yaml:"annotations"`
 	Notification_policy_slug string                                                           `yaml:"notification_policy_slug"`
 	Series_conditions        map[string]map[string]map[string][]chronosphereMonitorConditions `yaml:"series_conditions"`
 }
