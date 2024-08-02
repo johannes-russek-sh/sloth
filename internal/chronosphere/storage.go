@@ -196,7 +196,7 @@ func createChronosphereMonitors(slo StorageSLO, collectionSlug string, logger lo
 
 		monitor := chronosphereMonitor{
 			Slug:                     ruleId,
-			Name:                     ruleId,
+			Name:                     rule.Annotations["summary"],
 			Query:                    rule.Expr,
 			Collection:               collectionSlug,
 			Interval_secs:            60,
