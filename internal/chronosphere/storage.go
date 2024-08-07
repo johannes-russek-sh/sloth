@@ -88,7 +88,7 @@ func rawChronosphereYAML(slos []StorageSLO, logger log.Logger) (int, []byte, err
 		return 0, nil, ErrNoSLORules
 	}
 
-	outputYaml := make([]byte, 0)
+	yamlDocuments := make([][]byte, 0)
 
 	for _, collection := range collections {
 		chronosphereCollectionYAML := NewChronosphereCollectionYAML()
@@ -97,8 +97,7 @@ func rawChronosphereYAML(slos []StorageSLO, logger log.Logger) (int, []byte, err
 		if err != nil {
 			return 0, nil, fmt.Errorf("could not format collections: %w", err)
 		}
-		outputYaml = append(outputYaml, collectionYaml...)
-		outputYaml = append(outputYaml, []byte("---\n")...)
+		yamlDocuments = append(yamlDocuments, collectionYaml)
 	}
 
 	for _, rule := range rules {
@@ -108,8 +107,7 @@ func rawChronosphereYAML(slos []StorageSLO, logger log.Logger) (int, []byte, err
 		if err != nil {
 			return 0, nil, fmt.Errorf("could not format recording rule: %w", err)
 		}
-		outputYaml = append(outputYaml, ruleYaml...)
-		outputYaml = append(outputYaml, []byte("---\n")...)
+		yamlDocuments = append(yamlDocuments, ruleYaml)
 	}
 
 	for _, monitor := range monitors {
@@ -119,8 +117,15 @@ func rawChronosphereYAML(slos []StorageSLO, logger log.Logger) (int, []byte, err
 		if err != nil {
 			return 0, nil, fmt.Errorf("could not format monitor: %w", err)
 		}
-		outputYaml = append(outputYaml, monitorYaml...)
-		outputYaml = append(outputYaml, []byte("---\n")...)
+		yamlDocuments = append(yamlDocuments, monitorYaml)
+	}
+
+	outputYaml := make([]byte, 0)
+	for i, doc := range yamlDocuments {
+		if i > 0 {
+			outputYaml = append(outputYaml, []byte("---\n")...)
+		}
+		outputYaml = append(outputYaml, doc...)
 	}
 
 	return len(collections), outputYaml, nil
